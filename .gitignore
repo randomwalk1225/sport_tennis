@@ -1,0 +1,28 @@
+# Virtual Environment
+venv/
+env/
+*.pyc
+__pycache__/
+
+# Data directories (cloned repositories)
+tennis_atp/
+tennis_wta/
+tennis_MatchChartingProject/
+
+# Models (large binary files)
+models/*.pkl
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Scraped data
+*.json
+scraped_data/
+
+# Logs
+*.log
