@@ -50,6 +50,17 @@ def load_predictor():
 try:
     predictor = load_predictor()
 
+    # Check if player data loaded successfully
+    if predictor.player_data is None:
+        st.error("Failed to load player database!")
+        st.info("""
+        **Troubleshooting:**
+        - Make sure `players_database.json` exists in the repository
+        - Check Streamlit Cloud logs for detailed errors
+        - Try rebooting the app from Streamlit Cloud dashboard
+        """)
+        st.stop()
+
     # Get list of available players
     player_list = sorted(list(predictor.player_data.keys()))
 

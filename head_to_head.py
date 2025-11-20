@@ -26,13 +26,23 @@ class HeadToHeadPredictor:
         import os
 
         json_path = 'players_database.json'
+        print(f"Checking for {json_path}...")
+        print(f"Current directory: {os.getcwd()}")
+        print(f"Files in directory: {os.listdir('.')[:10]}")  # Show first 10 files
+
         if os.path.exists(json_path):
             print(f"Loading player database from {json_path}...")
-            with open(json_path, 'r') as f:
-                self.player_data = json.load(f)
-            print(f"[+] Loaded {len(self.player_data)} players from JSON")
-            return True
-        return False
+            try:
+                with open(json_path, 'r') as f:
+                    self.player_data = json.load(f)
+                print(f"[+] Loaded {len(self.player_data)} players from JSON")
+                return True
+            except Exception as e:
+                print(f"[-] Error loading JSON: {e}")
+                return False
+        else:
+            print(f"[-] {json_path} not found")
+            return False
 
     def load_player_database(self):
         """Load recent player data to get stats"""
