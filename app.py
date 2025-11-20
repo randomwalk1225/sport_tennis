@@ -61,29 +61,45 @@ try:
         """)
         st.stop()
 
-    # Get list of available players
-    player_list = sorted(list(predictor.player_data.keys()))
+    # Get list of available players with rankings
+    player_options = []
+    for name, info in predictor.player_data.items():
+        rank = int(info['rank']) if info['rank'] < 999 else 999
+        if rank < 999:
+            player_options.append(f"#{rank} - {name}")
+        else:
+            player_options.append(f"Unranked - {name}")
 
-    st.success(f"[+] Model loaded! {len(player_list)} players in database")
+    player_options = sorted(player_options, key=lambda x: int(x.split(' - ')[0].replace('#', '').replace('Unranked', '9999')))
+
+    st.success(f"[+] Model loaded! {len(player_options)} players in database")
 
     # Input section
     col1, col2 = st.columns(2)
 
     with col1:
         st.subheader("Player 1")
-        player1_input = st.text_input(
-            "Enter player name (e.g., Djokovic):",
+        player1_selection = st.selectbox(
+            "Select or search player:",
+            options=[""] + player_options,
             key="player1",
-            help="Start typing to search players"
+            help="Type to search, or scroll to select",
+            index=0
         )
+        # Extract player name from selection
+        player1_input = player1_selection.split(' - ')[-1] if player1_selection else ""
 
     with col2:
         st.subheader("Player 2")
-        player2_input = st.text_input(
-            "Enter player name (e.g., Alcaraz):",
+        player2_selection = st.selectbox(
+            "Select or search player:",
+            options=[""] + player_options,
             key="player2",
-            help="Start typing to search players"
+            help="Type to search, or scroll to select",
+            index=0
         )
+        # Extract player name from selection
+        player2_input = player2_selection.split(' - ')[-1] if player2_selection else ""
 
     # Match settings
     st.subheader("Match Settings")
@@ -211,27 +227,14 @@ try:
 
     # Sample predictions
     with st.expander("🎯 Try Sample Predictions"):
-        st.markdown("Click any matchup to auto-fill:")
+        st.markdown("Popular matchups to try:")
+        st.markdown("""
+        - **#1 Novak Djokovic** vs **#2 Carlos Alcaraz**
+        - **#4 Jannik Sinner** vs **#3 Daniil Medvedev**
+        - **Rafael Nadal** vs **Roger Federer** (Legends)
 
-        sample_col1, sample_col2, sample_col3 = st.columns(3)
-
-        with sample_col1:
-            if st.button("Djokovic vs Alcaraz"):
-                st.session_state.player1 = "Djokovic"
-                st.session_state.player2 = "Alcaraz"
-                st.rerun()
-
-        with sample_col2:
-            if st.button("Sinner vs Medvedev"):
-                st.session_state.player1 = "Sinner"
-                st.session_state.player2 = "Medvedev"
-                st.rerun()
-
-        with sample_col3:
-            if st.button("Nadal vs Federer"):
-                st.session_state.player1 = "Nadal"
-                st.session_state.player2 = "Federer"
-                st.rerun()
+        Use the dropdown menus above to select these players!
+        """)
 
 except Exception as e:
     st.error(f"Error loading predictor: {str(e)}")
