@@ -10,7 +10,8 @@ tennis_wta/
 tennis_MatchChartingProject/
 
 # Models (large binary files)
-models/*.pkl
+# Note: keeping models/tennis_predictor_best.pkl for deployment
+models/tennis_predictor_2000_2024.pkl
 
 # IDE
 .vscode/
