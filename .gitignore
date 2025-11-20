@@ -23,6 +23,7 @@ Thumbs.db
 
 # Scraped data
 *.json
+!players_database.json
 scraped_data/
 
 # Logs

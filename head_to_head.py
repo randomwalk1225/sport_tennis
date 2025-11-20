@@ -20,13 +20,32 @@ class HeadToHeadPredictor:
         self.player_data = None
         self.load_player_database()
 
+    def load_player_database_from_json(self):
+        """Load player database from JSON file (for deployment)"""
+        import json
+        import os
+
+        json_path = 'players_database.json'
+        if os.path.exists(json_path):
+            print(f"Loading player database from {json_path}...")
+            with open(json_path, 'r') as f:
+                self.player_data = json.load(f)
+            print(f"[+] Loaded {len(self.player_data)} players from JSON")
+            return True
+        return False
+
     def load_player_database(self):
         """Load recent player data to get stats"""
-        print("Loading player database...")
+        # Try loading from JSON first (for deployment)
+        if self.load_player_database_from_json():
+            return
+
+        print("Loading player database from ATP data...")
         df = self.manager.load_matches('atp', years=[2024])
 
         if df is None:
             print("Failed to load data")
+            print("HINT: For deployment, make sure players_database.json exists")
             return
 
         # Create player database with latest stats
